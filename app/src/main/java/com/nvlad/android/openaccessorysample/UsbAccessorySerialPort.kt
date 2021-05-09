@@ -43,34 +43,34 @@ class UsbAccessorySerialPort(val usbAccessory: UsbAccessory){
         parcelFileDescriptor?.close()
     }
 
-//    fun getInputStream(): ConnectionInputStream {
-//        return object : ConnectionInputStream{
-//            override fun read(rxBuffer: ByteArray?): Int {
-//                //Logger.log(Log.DEBUG, TAG, "read: $rxBuffer")
-//                return iStream?.read(rxBuffer) ?: -1
-//            }
-//
-//            override fun close() {
-//                Log.d(TAG, "closing input stream")
-//                iStream?.close()
-//            }
-//
-//        }
-//    }
-//
-//    fun getOutputStream(): ConnectionOutputStream {
-//        return object : ConnectionOutputStream{
-//            override fun write(txBuffer: ByteArray?) {
-//                //Logger.log(Log.DEBUG, TAG, "write: $txBuffer")
-//                oStream?.write(txBuffer)
-//            }
-//
-//
-//            override fun close() {
-//                Log.d(TAG, "closing output stream")
-//                oStream?.close()
-//            }
-//
-//        }
-//    }
+    fun getInputStream(): ConnectionInputStream {
+        return object : ConnectionInputStream{
+            override fun read(rxBuffer: ByteArray?): Int {
+                Log.d(TAG, "read: $rxBuffer")
+                return iStream?.read(rxBuffer) ?: -1
+            }
+
+            override fun close() {
+                Log.d(TAG, "closing input stream")
+                iStream?.close()
+            }
+
+        }
+    }
+
+    fun getOutputStream(): ConnectionOutputStream {
+        return object : ConnectionOutputStream{
+            override fun write(txBuffer: ByteArray?) {
+                Log.d(TAG, "write: $txBuffer")
+                oStream?.write(txBuffer)
+            }
+
+
+            override fun close() {
+                Log.d(TAG, "closing output stream")
+                oStream?.close()
+            }
+
+        }
+    }
 }
