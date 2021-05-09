@@ -12,12 +12,27 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AndroidOpenAccessorySample.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".AccessoryConnectedActivity"
+            android:theme="@style/Theme.Transparent"
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:taskAffinity="com.swivl.android.taskAffinityAccessoryConnected"
+            android:process=":AccessoryConnectedActivityProcess"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
+            </intent-filter>
+            <meta-data android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" android:resource="@xml/usb_accessory_filter" />
         </activity>
     </application>
 
