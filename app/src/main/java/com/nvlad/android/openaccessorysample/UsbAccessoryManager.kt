@@ -30,23 +30,19 @@ class UsbAccessoryManager(context: Context){
         val ACTION_USB_ACCESSORY_ATTACHED = TAG + "action_accessory_attached"
     }
 
-    private fun registerUsbAttachReceiver() {
+    fun registerUsbAttachReceiver() {
         Log.d(TAG, "registering usb attach receiver")
         val filter = IntentFilter()
         filter.addAction(ACTION_USB_ACCESSORY_ATTACHED)
         applicationContext.registerReceiver(usbAttachedEventReceiver, filter)
     }
 
-    private fun unregisterUsbAttachReceiver() {
+    fun unregisterUsbAttachReceiver() {
         try {
             applicationContext.unregisterReceiver(usbAttachedEventReceiver)
         } catch (e: IllegalArgumentException) {
             Log.w(TAG, "Unregistering usbAttachedEventReceiver receiver, that wasnt registered")
         }
-    }
-
-    fun isAcceptingIncomingConnectionRequested(): Boolean {
-        return false
     }
 
     private inner class UsbAttachedBroadcastReceiver : BroadcastReceiver() {

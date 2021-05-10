@@ -13,14 +13,24 @@ import com.nvlad.android.openaccessorysample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-
     private lateinit var binding: ActivityMainBinding
+    private lateinit var usbAccessoryManager: UsbAccessoryManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        usbAccessoryManager = UsbAccessoryManager(this)
+    }
 
+    override fun onResume() {
+        super.onResume()
+        usbAccessoryManager.registerUsbAttachReceiver()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        usbAccessoryManager.unregisterUsbAttachReceiver()
     }
 }
