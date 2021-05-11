@@ -21,7 +21,9 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        usbAccessoryManager = UsbAccessoryManager(this)
+        usbAccessoryManager = UsbAccessoryManager(this){ state, errorMessage ->
+
+        }
     }
 
     override fun onResume() {

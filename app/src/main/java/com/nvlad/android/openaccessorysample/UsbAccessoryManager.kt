@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class UsbAccessoryManager(context: Context){
+class UsbAccessoryManager(context: Context, callback: (ConnectionState, String?) -> Unit){
     private val TAG = UsbAccessoryManager::class.java.simpleName
     private val ACCESSORY_MODEL = "CX-Series Robot"
     private val ACCESSORY_MANUFACTURER = "Swivl Inc"
