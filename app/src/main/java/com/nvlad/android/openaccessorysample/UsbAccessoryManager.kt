@@ -102,6 +102,9 @@ class UsbAccessoryManager(context: Context, val callback: (ConnectionState, Stri
                 val readBytes = inStream.read(readBuffer)
             } catch (e: IOException) {
                 Log.e(TAG, "Stream IOException " + e.message)
+                GlobalScope.launch(Dispatchers.IO){
+                    callback.invoke(ConnectionState.disconnected, e.message)
+                }
                 break
             }
             delay(100L)
