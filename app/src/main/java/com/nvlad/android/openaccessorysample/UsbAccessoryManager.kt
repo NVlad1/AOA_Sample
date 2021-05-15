@@ -9,15 +9,18 @@ import android.hardware.usb.UsbManager
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.IOException
 
-class UsbAccessoryManager(context: Context, callback: (ConnectionState, String?) -> Unit){
+class UsbAccessoryManager(context: Context, val callback: (ConnectionState, String?) -> Unit){
     private val TAG = UsbAccessoryManager::class.java.simpleName
     private val ACCESSORY_MODEL = "CX-Series Robot"
     private val ACCESSORY_MANUFACTURER = "Swivl Inc"
     private val applicationContext: Context
     private val usbAttachedEventReceiver: BroadcastReceiver = UsbAttachedBroadcastReceiver()
     private val usbManager: UsbManager
+    private var streamInterrupted = false
 
     init{
         applicationContext = context.applicationContext
@@ -58,10 +61,12 @@ class UsbAccessoryManager(context: Context, callback: (ConnectionState, String?)
         GlobalScope.launch(Dispatchers.Main) {
             val usbAccessorySerialPort = UsbAccessorySerialPort(usbAccessory)
             val result = usbAccessorySerialPort.open(usbManager)
-//            if (result) deviceDiscovererListener.onNewConnection(
-//                    usbAccessorySerialPort.serial,
-//                    usbAccessorySerialPort.model,
-//                    SwivlConnection(usbAccessorySerialPort, getSwivlGenerationFromUsbDescriptor(usbAccessorySerialPort.usbAccessory).generationCode, SwivlConnectionType.AOA))
+            if (result){
+                callback.invoke(ConnectionState.connected, null)
+                startListeningToAccessory(usbAccessorySerialPort)
+            } else {
+                callback.invoke(ConnectionState.connection_failed, null)
+            }
         }
     }
 
@@ -74,6 +79,48 @@ class UsbAccessoryManager(context: Context, callback: (ConnectionState, String?)
                 openAccessory(accessory)
                 return
             }
+        }
+    }
+
+    private fun startListeningToAccessory(usbAccessorySerialPort: UsbAccessorySerialPort){
+        GlobalScope.launch(Dispatchers.IO) { listeningLoop(usbAccessorySerialPort) }
+    }
+
+    private suspend fun listeningLoop(socket: UsbAccessorySerialPort){
+        val inStream: ConnectionInputStream
+        val outStream: ConnectionOutputStream
+        val readBuffer = ByteArray(1024)
+        try {
+            inStream = socket.getInputStream()
+            outStream = socket.getOutputStream()
+        } catch (e: IOException) {
+            Log.e(TAG, "streams not created: " + e.message)
+            return
+        }
+        while (!streamInterrupted){
+            try {
+                val readBytes = inStream.read(readBuffer)
+            } catch (e: IOException) {
+                Log.e(TAG, "Stream IOException " + e.message)
+                break
+            }
+            delay(100L)
+        }
+        // releasing resources
+        try {
+            inStream.close()
+        } catch (e: IOException) {
+            Log.e(TAG, "inStream.close() failed " + e.message)
+        }
+        try {
+            outStream.close()
+        } catch (e: IOException) {
+            Log.e(TAG, "outStream.close() failed " + e.message)
+        }
+        try {
+            socket.close()
+        } catch (e: IOException) {
+            Log.e(TAG, "socket.close() failed " + e.message)
         }
     }
 }
