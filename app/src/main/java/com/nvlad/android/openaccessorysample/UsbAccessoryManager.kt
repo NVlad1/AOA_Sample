@@ -15,8 +15,8 @@ import java.io.IOException
 
 class UsbAccessoryManager(context: Context, val callback: (ConnectionState, String?) -> Unit){
     private val TAG = UsbAccessoryManager::class.java.simpleName
-    private val ACCESSORY_MODEL = "CX-Series Robot"
-    private val ACCESSORY_MANUFACTURER = "Swivl Inc"
+    private val ACCESSORY_MODEL = "your accessory model"
+    private val ACCESSORY_MANUFACTURER = "your accessory manufacturer"
     private val applicationContext: Context
     private val usbAttachedEventReceiver: BroadcastReceiver = UsbAttachedBroadcastReceiver()
     private val usbManager: UsbManager
