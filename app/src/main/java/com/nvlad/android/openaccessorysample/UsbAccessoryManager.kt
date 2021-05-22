@@ -41,6 +41,7 @@ class UsbAccessoryManager(context: Context, val callback: (ConnectionState, Stri
     }
 
     fun unregisterUsbAttachReceiver() {
+        Log.d(TAG, "unregistering usb attach receiver")
         try {
             applicationContext.unregisterReceiver(usbAttachedEventReceiver)
         } catch (e: IllegalArgumentException) {
