@@ -60,7 +60,7 @@ class UsbAccessoryManager(context: Context, val callback: (ConnectionState, Stri
 
     private fun openAccessory(usbAccessory: UsbAccessory){
         GlobalScope.launch(Dispatchers.Main) {
-            val usbAccessorySerialPort = UsbAccessorySerialPort(usbAccessory)
+            val usbAccessorySerialPort = UsbAccessoryIO(usbAccessory)
             val result = usbAccessorySerialPort.open(usbManager)
             if (result){
                 callback.invoke(ConnectionState.connected, null)
@@ -83,11 +83,11 @@ class UsbAccessoryManager(context: Context, val callback: (ConnectionState, Stri
         }
     }
 
-    private fun startListeningToAccessory(usbAccessorySerialPort: UsbAccessorySerialPort){
-        GlobalScope.launch(Dispatchers.IO) { listeningLoop(usbAccessorySerialPort) }
+    private fun startListeningToAccessory(usbAccessoryIO: UsbAccessoryIO){
+        GlobalScope.launch(Dispatchers.IO) { listeningLoop(usbAccessoryIO) }
     }
 
-    private suspend fun listeningLoop(socket: UsbAccessorySerialPort){
+    private suspend fun listeningLoop(socket: UsbAccessoryIO){
         val inStream: ConnectionInputStream
         val outStream: ConnectionOutputStream
         val readBuffer = ByteArray(1024)

@@ -8,8 +8,8 @@ import java.io.FileDescriptor
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
-class UsbAccessorySerialPort(val usbAccessory: UsbAccessory){
-    private val TAG = UsbAccessorySerialPort::class.java.simpleName
+class UsbAccessoryIO(val usbAccessory: UsbAccessory){
+    private val TAG = UsbAccessoryIO::class.java.simpleName
     private var parcelFileDescriptor: ParcelFileDescriptor? = null
     private var fileDescriptor: FileDescriptor? = null
     private var iStream: FileInputStream? = null
